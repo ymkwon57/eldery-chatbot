@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poor+Story" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <br>
+    <h1>노인을 위한 식사친구 챗봇</h1>
+    <div>
+      <div id="chatbox">
+        <!-- <p class="alert alert-warning" role="alert"><span></span></p> -->
+        <div class="alert alert-warning" role="alert">오늘 식사는 어떻게 하실 생각이세요?</div>
+          <audio controls>
+            <source src="./static/audio/ask.mp3" type="audio/mpeg">
+          </audio>
+      </div>
+      <div id="userInput">
+        <input id="textInput" type="text" name="msg" placeholder="Message">
+<!--         <input id="buttonInput" type="submit" value="Send"> -->
+        <button class="btn btn-info" id="buttonInput" type="submit">Send</button>
+      </div>      
+<!--       <audio controls>
+        <source src="/music/q3.wav" type="audio/wav">
+      </audio> -->
+      <script>
+        function getBotResponse() {
+          var rawText = $("#textInput").val();
+          var rawFile = rawText.slice(0,9)
+          var rawFileName = rawFile.replace(/\s/g, '');
+          console.log(rawFileName);
+          var userHtml = '<p class="alert alert-primary"><span>' + rawText + '</span></p>' + '<audio controls><source src="./static/audio/'+rawFileName+'.mp3\" type="audio/mpeg"></audio>';
+
+          $("#textInput").val("");
+          $("#chatbox").append(userHtml);
+          document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
+          $.get("/get", { msg: rawText }).done(function(data) {
+            var botFile = data.slice(0,9)
+            var botFileName = botFile.replace(/\s/g, '');
+            console.log(botFileName);
+            var botHtml = '<p class="alert alert-warning"><span>' + data + '</span></p>' + '<audio controls><source src="./static/audio/'+botFileName+'.mp3\" type="audio/mpeg"></audio>';
+            $("#chatbox").append(botHtml);
+            document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
+          });
+        }
+        $("#textInput").keypress(function(e) {
+            if(e.which == 13) {
+                getBotResponse();
+            }
+        });
+        $("#buttonInput").click(function() {
+          getBotResponse();
+        })
+      </script>
+    </div>
+  </body>
+</html>
