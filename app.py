@@ -9,25 +9,25 @@ from news import *
 
 app = Flask(__name__)
 
-english_bot = ChatBot("Chatterbot", storage_adapter="chatterbot.storage.SQLStorageAdapter")
+english_bot = ChatBot('Chatterbot', storage_adapter='chatterbot.storage.SQLStorageAdapter')
 
 #english_bot.set_trainer(ChatterBotCorpusTrainer)
-#english_bot.train("chatterbot.corpus.english")
+#english_bot.train('chatterbot.corpus.english')
 
 
-@app.route("/")
+@app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template('index.html')
 
 def get_tts(input):
 	make_tts(input)
 
-@app.route("/get")
+@app.route('/get')
 def get_bot_response():
     userText = request.args.get('msg')
     #get_tts(userText)
 
-    # print("---------users_input : "+ str(users_input))
+    # print('---------users_input : '+ str(users_input))
     # return str(news_intent(userText))
 
     if '레시피' in userText:
@@ -36,5 +36,5 @@ def get_bot_response():
     else:
         return str(get_recipe(tagging(userText).get('food')))
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
